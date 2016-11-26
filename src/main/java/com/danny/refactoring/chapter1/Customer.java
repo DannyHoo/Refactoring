@@ -28,69 +28,48 @@ public class Customer {
     }
 
     public String statement() {
-        double totalAmount = 0;
-        int frequentRenterPoints = 0;
+
         Enumeration rentals = _rentals.elements();//用于遍历
         String result = "Rental Record for " + get_name() + "\n";
         while (rentals.hasMoreElements()) {
-            /*double thisAmount = 0;*/
             Rental each = (Rental) rentals.nextElement();
-            frequentRenterPoints+=each.getFrequentRenterPoints();
-
-            /*thisAmount=each.getCharge();*/
-            /*thisAmount=amountFor(each);*/
-            //determine amounts for each line
-            /*switch (each.get_movie().get_priceCode()) {
-                case Movie.REGULAR:
-                    thisAmount += 2;
-                    if (each.get_daysRented() > 2)//租期大于2天
-                        thisAmount += (each.get_daysRented() - 2) * 1.5;
-                    break;
-                case Movie.NEW_RELEASE:
-                    thisAmount += each.get_daysRented() * 3;
-                    break;
-                case Movie.CHILDRENS:
-                    thisAmount += 1.5;
-                    if (each.get_daysRented() > 3)//租期大于3天
-                        thisAmount += (each.get_daysRented() - 3) * 1.5;
-                    break;
-            }*/
-
-            //add frequent renter points
-            /*frequentRenterPoints++;*/
-
-            //add bonus for a two day new release rental
-            if ((each.get_movie().get_priceCode() == Movie.NEW_RELEASE) && each.get_daysRented() > 1)
-                frequentRenterPoints++;
 
             //show figure for this rental
             result += "\t" + each.get_movie().get_title() + "\t" + String.valueOf(each.getCharge()) + "\n";
-            totalAmount += each.getCharge();
         }
 
         // add footer lines
-        result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
-        result += "You earned " + String.valueOf(frequentRenterPoints) + " frequent renter points";
+        result += "Amount owed is " + String.valueOf(getTotalCharge()) + "\n";
+        result += "You earned " + String.valueOf(getTotalFrequentRenterPoints()) + " frequent renter points";
         return result;
     }
 
-    /*public double amountFor(Rental aRental){
-        double result=0;
-        switch (aRental.get_movie().get_priceCode()) {
-            case Movie.REGULAR:
-                result += 2;
-                if (aRental.get_daysRented() > 2)//租期大于2天
-                    result += (aRental.get_daysRented() - 2) * 1.5;
-                break;
-            case Movie.NEW_RELEASE:
-                result += aRental.get_daysRented() * 3;
-                break;
-            case Movie.CHILDRENS:
-                result += 1.5;
-                if (aRental.get_daysRented() > 3)//租期大于3天
-                    result += (aRental.get_daysRented() - 3) * 1.5;
-                break;
+    /**
+     * 用Customer类的getTotalCharge()代替statement()方法中的临时变量totalAmount
+     * 提高方法的简洁渡
+     * 抽出来也能达到复用的效果
+     * @return
+     */
+    private double getTotalCharge(){
+        double totalAmount=0;
+        Enumeration rentals=_rentals.elements();
+        while(rentals.hasMoreElements()){
+            totalAmount+=((Rental)rentals.nextElement()).getCharge();
         }
-        return result;
-    }*/
+        return totalAmount;
+    }
+
+    /**
+     * 同样的方式处理 积分计算
+     * 抽出来之后，有个问题 --> 是不是整个过程，增加了多个循环？？？？？？
+     * @return
+     */
+    private int getTotalFrequentRenterPoints(){
+        int frequentRenterPoints = 0;
+        Enumeration rentals=_rentals.elements();
+        while(rentals.hasMoreElements()){
+            frequentRenterPoints+=((Rental)rentals.nextElement()).getFrequentRenterPoints();
+        }
+        return frequentRenterPoints;
+    }
 }

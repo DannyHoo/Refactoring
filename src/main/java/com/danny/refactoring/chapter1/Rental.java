@@ -58,6 +58,10 @@ public class Rental {
         return result;
     }
 
+    /**
+     * 计算积分
+     * @return
+     */
     public int getFrequentRenterPoints(){
         return 1;
     }
