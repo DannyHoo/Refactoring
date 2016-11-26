@@ -27,20 +27,33 @@ public class Customer {
         _rentals.add(rental);
     }
 
+    /**
+     * 打印账单
+     * @return
+     */
     public String statement() {
-
         Enumeration rentals = _rentals.elements();//用于遍历
         String result = "Rental Record for " + get_name() + "\n";
         while (rentals.hasMoreElements()) {
             Rental each = (Rental) rentals.nextElement();
 
             //show figure for this rental
-            result += "\t" + each.get_movie().get_title() + "\t" + String.valueOf(each.getCharge()) + "\n";
+            result += "\t" + each.get_movie().get_title() + "\t" + String.valueOf(each.get_movie().getCharge(each.get_daysRented())) + "\n";
         }
 
         // add footer lines
         result += "Amount owed is " + String.valueOf(getTotalCharge()) + "\n";
         result += "You earned " + String.valueOf(getTotalFrequentRenterPoints()) + " frequent renter points";
+        return result;
+    }
+
+    /**
+     * 打印账单（HTML格式）
+     * @return
+     */
+    public String htmlStatement() {
+        String result = "";
+        //实现省略
         return result;
     }
 
@@ -54,13 +67,14 @@ public class Customer {
         double totalAmount=0;
         Enumeration rentals=_rentals.elements();
         while(rentals.hasMoreElements()){
-            totalAmount+=((Rental)rentals.nextElement()).getCharge();
+            Rental rental=(Rental)rentals.nextElement();
+            totalAmount+=rental.get_movie().getCharge(rental.get_daysRented());
         }
         return totalAmount;
     }
 
     /**
-     * 同样的方式处理 积分计算
+     * 同样的方式处理 总积分计算
      * 抽出来之后，有个问题 --> 是不是整个过程，增加了多个循环？？？？？？
      * @return
      */
